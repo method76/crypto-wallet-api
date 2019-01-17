@@ -1,0 +1,91 @@
+server:
+  port: 80
+
+app:
+  transfer-pp: tpfvlsekzhdls7
+  test-topic-name: 'WLT_TRANSMIT.KR00'
+  enabledSymbols: ETH,CPD
+  enabledERC20s: CPD
+  diskCheckDir: '/etc/parity/data'
+  
+logging:
+  level:
+    org.hibernate.SQL: info
+    crypto.wallet: debug
+
+spring:
+  application:
+    name: cellpinda-wallet-api
+  datasource:
+#    url: jdbc:mariadb://106.10.45.182:3306/wallet?autoReconnect=true&amp;useUnicode=true&amp;charaterEncoding=utf-8
+    url: jdbc:mariadb://127.0.0.1:3306/wallet?autoReconnect=true&amp;useUnicode=true&amp;charaterEncoding=utf-8  
+    username: cellpinda-api
+    password: by9lXW5uksGgmZNYmjlb
+    type: com.zaxxer.hikari.HikariDataSource
+    connectionProperties: useUnicode=true;characterEncoding=utf-8;autoReconnect=true;serverTimezone=UTC
+    driver-class-name: org.mariadb.jdbc.Driver
+    testWhileIdle: true
+    validationQuery: SELECT 1
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    properties:  
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        naming.implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+  mvc:
+    view:
+      prefix: '/WEB-INF/jsp/'
+      suffix: '.jsp'
+  # Message Queue API
+  kafka:
+    bootstrap-servers: 127.0.0.1:64200
+    consumer:
+      group-id: 'WLT_TRANSMIT'
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  
+crypto:
+  btc: 
+    rpcurl: http://106.10.51.219:64101/
+    rpcid: btc-rpc
+    rpcpw: bV8NGx3WsNWU1FU9jVx3
+    sendaccount: btc-sender
+    sendaddr: 3P6yoEDNrcZcUs3uMM3RW7qCGFtz8SZbk6
+    testaddr: 333qWatuDDtHRfJjgVcsVNAVvAwCQ114iR
+    pp: P3Li3hdsYxv9rGu65U7Q
+    airdropaccount: btc-airdrop
+    airdropaddr: 37Y9fGVfNjsvNb1kXvLUhaD9ED9u5EMeuJ
+    reserveaccount: btc-reserve
+    reserveaddr: 34CjvpMSk9ACoxweZi6tg3ULem6zQAvJWB
+    coldaddr: ''
+    decimals: 8
+    initialblock: 539732
+    minconfirm: 2
+    minamtgather: 0.1
+  eth:
+    rpcurl: http://127.0.0.1:64001/  
+#    rpcurl: http://106.10.45.182:64001/
+    sendaddr: '0xae01fec08cdb304adc2c5634eb23e7bfdb83fce1'
+    testaddr: '0x889f67a9c91ece540d3a3ea428d37220182f9579'
+    pp: mo8lU1b1bwyf2OBCvSwG
+    airdropaddr: '0x2a87bbe1fd34c71c7af9f866b56971d1b9c3af2e'
+    reserveaddr: '0xbe27bf8519ec7fda4ed32ba6ac5e3ac7a9a41901'
+    coldaddr: ''
+    decimals: 8
+    initialblock: 6329086
+    mingasamt: 0.005
+    minconfirm: 18
+    minamtgather: 0.2
+  cpd:
+    decimals: 8
+    contractaddr: '0x5f4a339fd4c64f8bb34935efa7a638b92ae82e9a'
+    rewarehouseaddr: '0x0B8e4B81983894251740aC2De3Ff5caeEeD06F78'
+    minamtgather: 10000
