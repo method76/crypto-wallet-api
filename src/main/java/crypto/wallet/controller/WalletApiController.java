@@ -112,78 +112,6 @@ public class WalletApiController implements WalletConst {
     }
     
     /**
-     * 사용자용) 토큰 구매 요청
-     * @param param
-     * @return
-     */
-    @RequestMapping(value="/buytoken", method= RequestMethod.POST) @ResponseBody 
-    public TokenBuyResponse buytoken(@RequestBody TokenBuyRequest param) {
-	    
-    	if (param.getUid()==0 || param.getPaySymbol()==null || param.getPayAmount()==0
-    			 || param.getTokenSymbol()==null || param.getTokenAmount()==0) {
-    		TokenBuyResponse ret = new TokenBuyResponse(param);
-    		ret.setCode(CODE_FAIL_PARAM);
-	        return ret;
-	    } else {
-	    	TokenBuyResponse ret = tokenSaleService.requestBuyToken(param);
-	        return ret;
-	    }
-	}
-    
-    /**
-     * 사용자용) 토큰 구매 요청
-     * @param param
-     * @return
-     */
-    @RequestMapping(value="/bonus", method= RequestMethod.POST) @ResponseBody 
-    public BonusResponse bonus(@RequestBody BonusRequest param) {
-	    
-    	if (param.getUid()==0 || param.getSymbol()==null || param.getAmount()==0) {
-    		BonusResponse ret = new BonusResponse(param);
-    		ret.setCode(CODE_FAIL_PARAM);
-	        return ret;
-	    } else {
-	        return tokenSaleService.requestBonusToken(param);
-	    }
-	}
-    
-    /**
-     * 사용자용) 토큰 구매 요청
-     * @param param
-     * @return
-     */
-    @RequestMapping(value="/manualPay", method= RequestMethod.POST) @ResponseBody 
-    public ManualPayResponse manualPay(@RequestBody ManualPayRequest param) {
-	    
-    	if (param.getUid()==0 || param.getTokenSymbol()==null || param.getTokenAmount()==0 
-    			|| param.getTokenAmount() > MAX_TRANSFER_MANUAL_PAYMENT) {
-    		ManualPayResponse ret = new ManualPayResponse(param);
-    		ret.setCode(CODE_FAIL_PARAM);
-	        return ret;
-	    } else {
-	        return tokenSaleService.requestManualPay(param);
-	    }
-	}
-    
-    /**
-     * 사용자용) 토큰 구매 요청
-     * @param param
-     * @return
-     */
-    @RequestMapping(value="/pointExchange", method= RequestMethod.POST) @ResponseBody 
-    public PointExchangeResponse pointExchange(@RequestBody PointExchangeRequest param) {
-	    
-    	if (param.getUid()==0 || param.getTokenSymbol()==null || param.getTokenAmount()==0 
-    			|| param.getTokenAmount() > MAX_TRANSFER_MANUAL_PAYMENT) {
-    		PointExchangeResponse ret = new PointExchangeResponse(param);
-    		ret.setCode(CODE_FAIL_PARAM);
-	        return ret;
-	    } else {
-	        return tokenSaleService.requestPointExchange(param);
-	    }
-	}
-    
-    /**
      * 사용자용) 토큰 구매내역/암호화폐 이체내역 조회
      * @param param
      * @return
@@ -218,48 +146,6 @@ public class WalletApiController implements WalletConst {
         	CryptoBalancesResponse res = new CryptoBalancesResponse();
             res.setCode(CODE_FAIL_PARAM);
             return res;
-        }
-    }
-    
-    /**
-     * 관리자용) 전체 사용자 토큰구매 내역
-     * @param param
-     * @return
-     */
-    @RequestMapping(value="/purchase", method= RequestMethod.POST) @ResponseBody 
-    public PurchaseResponse purchase(@RequestBody PersonalInfoRequest param) {
-	    
-    	if (param.getSymbol()==null || !SYMBOL_CPD.equals(param.getSymbol())) {
-    		PurchaseResponse ret = new PurchaseResponse();
-    		ret.setCode(CODE_FAIL_PARAM);
-	        return ret;
-	    } else {
-	    	return tokenSaleService.getAllPurchases(param);
-	    }
-	}
-    
-    /**
-     * 관리자용) 원화 입금
-     * @param param
-     * @return FiatDepositResponse
-     */
-    @RequestMapping(value="/fiatdeposit", method= RequestMethod.POST) 
-    @ResponseBody public FiatDepositResponse fiatdeposit(@RequestBody FiatDepositRequest param) {
-        
-        if (param.getUid()<1 || param.getSymbol()==null 
-        		|| !UNIT_KRW.equals(param.getSymbol())
-        		|| param.getAmount()==0 || param.getOrderId()==null
-        		|| param.getOrderId().length()<1
-        		|| param.getRegUsr()==null || param.getRegUsr().length()<1
-        		|| param.getPassword()==null || param.getPassword().length()<1) {
-        	FiatDepositResponse res = new FiatDepositResponse();
-            res.setCode(CODE_FAIL_PARAM);
-            return res;
-        } else {
-        	// UID로 조회할 때
-        	FiatDepositResponse res = new FiatDepositResponse(param);
-        	tokenSaleService.fiatDeposit(res);
-        	return res;
         }
     }
     
@@ -329,24 +215,4 @@ public class WalletApiController implements WalletConst {
         }
     }
     
-    /**
-     * 
-     * @param param
-     * @return
-     */
-    @RequestMapping(value="/txstatus", method= RequestMethod.POST) @ResponseBody 
-    public TxHistoryResponse txStatus(@RequestBody PersonalInfoRequest param) {
-    	if (param.getOrderId()==null || param.getOrderId().length() < 1) {
-    		TxHistoryResponse res = new TxHistoryResponse();
-	        res.setCode(CODE_FAIL_PARAM);
-	        return res;
-	    } else {
-	    	TxHistoryResponse res = new TxHistoryResponse();
-	    	List<TransactionResponse> list = tokenSaleService.getTxHistory
-	    			(param.getOrderId());
-	    	res.getResult().setTxs(list);
-	        return res;
-	    }
-	}
-
 }
